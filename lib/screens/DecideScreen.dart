@@ -2,6 +2,8 @@ import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_mobx_example/stores/choice_list.dart';
+import 'package:flutter_mobx_example/widgets/DecideScreenBody.dart';
+import 'package:flutter_mobx_example/widgets/EmptyChoiceBody.dart';
 
 class DecideScreen extends StatelessWidget {
   const DecideScreen({Key key}) : super(key: key);
@@ -21,7 +23,7 @@ class DecideScreen extends StatelessWidget {
               appBar: AppBar(
                 title: Text('Make a Choice'),
               ),
-              // body: store.isEmpty ? EmptyChoiceBody() : DecideScreenBody(),
+              body: store.isEmpty ? EmptyChoiceBody() : DecideScreenBody(),
               floatingActionButton: FloatingActionButton(
                 onPressed: () => _gotoListScreen(context),
                 tooltip: 'Add a choice',
