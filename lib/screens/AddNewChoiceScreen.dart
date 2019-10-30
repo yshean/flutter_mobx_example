@@ -18,13 +18,6 @@ class _AddNewChoiceScreenState extends State<AddNewChoiceScreen> {
   List<String> _categoryList = [];
   String _selectedCategory;
 
-  List<DropdownMenuItem> _dropdownMenuItems(List<String> categoryList) {
-    return categoryList
-        .map((category) =>
-            DropdownMenuItem(value: category, child: Text(category)))
-        .toList();
-  }
-
   @override
   void initState() {
     super.initState();
@@ -49,6 +42,13 @@ class _AddNewChoiceScreenState extends State<AddNewChoiceScreen> {
     super.dispose();
   }
 
+  List<DropdownMenuItem> _dropdownMenuItems() {
+    return _categoryList
+        .map((category) =>
+            DropdownMenuItem(value: category, child: Text(category)))
+        .toList();
+  }
+
   Widget _buildForm() {
     return Container(
       constraints: BoxConstraints.expand(),
@@ -70,7 +70,7 @@ class _AddNewChoiceScreenState extends State<AddNewChoiceScreen> {
                 child: DropdownButton(
                   isExpanded: true,
                   value: _selectedCategory,
-                  items: _dropdownMenuItems(_categoryList),
+                  items: _dropdownMenuItems(),
                   // items: _dropdownMenuItems(categoryList),
                   onChanged: (value) {
                     // setSelectedCategory(value);
@@ -89,6 +89,7 @@ class _AddNewChoiceScreenState extends State<AddNewChoiceScreen> {
               final String newQuestion = await showDialog(
                   context: context,
                   builder: (BuildContext context) {
+                    // return AddQuestionDialog();
                     return AddQuestionDialog(list: _categoryList);
                   });
               if (newQuestion != null) {

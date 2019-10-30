@@ -1,7 +1,6 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx_example/screens/DecideScreen.dart';
-import 'package:flutter_mobx_example/services/storable_service.dart';
 import 'package:flutter_mobx_example/stores/choice_list.dart';
 
 void main() => runApp(MyApp());
@@ -31,6 +30,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
+    print("loading from local");
     _choiceList.loadFromLocal();
     super.initState();
   }

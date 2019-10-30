@@ -35,6 +35,7 @@ class ChoiceListLocalStorableService {
   }
 
   Future<void> saveData(ChoiceList list) async {
+    print('saving list: ${list.toJson()}');
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString(_attrName, jsonEncode(list.toJson()));
   }

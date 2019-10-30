@@ -13,11 +13,16 @@ class ChoiceListScreen extends StatelessWidget {
     final Map data = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => AddNewChoiceScreen(
+        builder: (_) => AddNewChoiceScreen(
           categoryList: store.categoryList,
         ),
       ),
     );
+
+    print('pop data: $data');
+    print(data);
+    print('categoryList at ChoiceListScreen _gotoAddScreen');
+    print(store.categoryList);
 
     if (data != null) {
       store.addChoice(data['answer'], data['category']);
@@ -26,7 +31,7 @@ class ChoiceListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final store = BlocProvider.getBloc<ChoiceList>();
+    // final store = BlocProvider.getBloc<ChoiceList>();
 
     return Observer(
       builder: (_) => Scaffold(
