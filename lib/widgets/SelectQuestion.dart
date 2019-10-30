@@ -4,8 +4,6 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_mobx_example/stores/choice_list.dart';
 
 class SelectQuestion extends StatelessWidget {
-  const SelectQuestion({Key key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     final store = BlocProvider.getBloc<ChoiceList>();

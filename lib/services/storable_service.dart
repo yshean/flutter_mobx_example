@@ -1,49 +1,41 @@
+import 'dart:convert';
+
 import 'package:flutter_mobx_example/stores/choice_list.dart';
-import 'package:mobx/mobx.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../stores/choice.dart';
+class ChoiceListLocalStorableService {
+  // final Function(Map<String, dynamic>) _fromJson;
+  // final Function(T) _toJson;
+  final String _attrName = "choices";
 
-abstract class StorableService<T> {
-  T fromJson(String json);
-  String toJson(T list);
+  // LocalStorableService(this._fromJson, this._toJson, this._attrName);
+  ChoiceListLocalStorableService();
 
-  Future<T> loadData();
-  void saveData(T list);
-}
+  // T fromJson(Map<String, dynamic> json) => _fromJson(json);
+  // Map<String, dynamic> toJson(T list) => _toJson(list);
 
-class LocalStorableService<T> implements StorableService<T> {
-  final Function(String) _fromJson;
-  final Function(T) _toJson;
-  final String _attrName;
-
-  LocalStorableService(this._fromJson, this._toJson, this._attrName);
-
-  T fromJson(String json) => _fromJson(json);
-  String toJson(T list) => _toJson(list);
-
-  Future<T> loadData() async {
+  Future<ChoiceList> loadData() async {
     print("loading data!");
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    // prefs.clear();
     final localStoreValue = prefs.getString(_attrName);
-    T decoded;
+    ChoiceList decoded;
     if (localStoreValue != null) {
-      decoded = fromJson(localStoreValue);
+      print(localStoreValue);
+      // Map<String, dynamic> json =
+      //     Map<String, dynamic>.from(jsonDecode(localStoreValue));
+      // print('JSON: $json');
+      // print('Runtime type: ${json.runtimeType}');
+      decoded = ChoiceList.fromJson(
+          Map<String, dynamic>.from(jsonDecode(localStoreValue)));
+      print(decoded.choices[0].answer);
+      print(decoded.selectedCategory);
     }
     return decoded;
   }
 
-  void saveData(T list) async {
+  Future<void> saveData(ChoiceList list) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_attrName, toJson(list));
+    await prefs.setString(_attrName, jsonEncode(list.toJson()));
   }
-}
-
-class ChoiceListLocalStorableService
-    extends LocalStorableService<ObservableList<Choice>> {
-  static final __fromJson = ChoiceList.fromJson;
-  static final __toJson = ChoiceList.toJson;
-  static final __attrName = "choices";
-
-  ChoiceListLocalStorableService() : super(__fromJson, __toJson, __attrName);
 }

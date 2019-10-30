@@ -10,8 +10,7 @@ ChoiceList _$ChoiceListFromJson(Map<String, dynamic> json) {
   return ChoiceList()
     ..choices = json['choices'] == null
         ? null
-        : const _ObservableListJsonConverter()
-            .fromJson(json['choices'] as List<Map<String, dynamic>>)
+        : const _ObservableListJsonConverter().fromJson(json['choices'] as List)
     ..selectedCategory = json['selectedCategory'] as String;
 }
 
@@ -84,6 +83,16 @@ mixin _$ChoiceList on _ChoiceList, Store {
   }
 
   final _$_ChoiceListActionController = ActionController(name: '_ChoiceList');
+
+  @override
+  void loadFromLocal() {
+    final _$actionInfo = _$_ChoiceListActionController.startAction();
+    try {
+      return super.loadFromLocal();
+    } finally {
+      _$_ChoiceListActionController.endAction(_$actionInfo);
+    }
+  }
 
   @override
   void setSelectedCategory(String category) {

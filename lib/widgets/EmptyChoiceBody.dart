@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
 class EmptyChoiceBody extends StatelessWidget {
-  const EmptyChoiceBody({Key key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Center(
