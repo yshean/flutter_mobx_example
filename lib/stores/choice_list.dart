@@ -54,8 +54,10 @@ abstract class _ChoiceList extends BlocBase with Store {
   @action
   void loadFromLocal() {
     storable.loadData().then((res) {
-      choices = res.choices;
-      selectedCategory = res.selectedCategory;
+      if (res != null) {
+        choices = res.choices;
+        selectedCategory = res.selectedCategory;
+      }
     });
   }
 
@@ -91,9 +93,20 @@ abstract class _ChoiceList extends BlocBase with Store {
   //   }
   // }
 
+  _ChoiceList() {
+    reaction((_) => choices.toList(), (_) {
+      print("saving data");
+      storable.saveData(this).then((_) {
+        print("here: saved!");
+      });
+    });
+  }
+
   @computed
   Map<String, ObservableList<Choice>> get choicesMap {
     final Map<String, ObservableList<Choice>> map = {};
+
+    print("[get choicesMap] Choices: ${choices.length}");
 
     if (choices.length == 0) {
       return map;
@@ -116,8 +129,14 @@ abstract class _ChoiceList extends BlocBase with Store {
   bool get isEmpty => choices.length == 0;
 
   @computed
-  List<String> get categoryList =>
-      Set<String>.from(choices.map<String>((v) => v.category)).toList();
+  List<String> get categoryList {
+    print("[get categoryList] Choices: ${choices.length}");
+    var something =
+        Set<String>.from(choices.map<String>((v) => v.category)).toList();
+    print(something);
+    return Set<String>.from(choices.map<String>((v) => v.category)).toList();
+  }
+  // =>
 
   @action
   void setSelectedCategory(String category) {
@@ -128,9 +147,9 @@ abstract class _ChoiceList extends BlocBase with Store {
   void addChoice(String answer, String category) {
     final choice = Choice(id: uuid.v4(), category: category, answer: answer);
     choices.add(choice);
-    storable.saveData(this).then((_) {
-      print("Saved!");
-    });
+    // storable.saveData(this).then((_) {
+    //   print("Saved!");
+    // });
   }
 
   @action
