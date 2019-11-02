@@ -34,33 +34,36 @@ class ChoiceListBody extends StatelessWidget {
     List<Widget> arr = List<Widget>();
 
     for (Choice choice in choices) {
-      arr.add(GestureDetector(
+      arr.add(
+        GestureDetector(
           child: Slidable(
-        key: ValueKey(choice.id),
-        actionPane: SlidableDrawerActionPane(),
-        actions: <Widget>[
-          IconSlideAction(
-            caption: 'Edit',
-            color: Colors.indigo,
-            icon: Icons.edit,
-            onTap: () => btnEditTouched(context, choice),
+            key: ValueKey(choice.id),
+            actionPane: SlidableDrawerActionPane(),
+            actions: <Widget>[
+              IconSlideAction(
+                caption: 'Edit',
+                color: Colors.indigo,
+                icon: Icons.edit,
+                onTap: () => btnEditTouched(context, choice),
+              ),
+            ],
+            secondaryActions: <Widget>[
+              IconSlideAction(
+                caption: 'Delete',
+                color: Colors.red,
+                icon: Icons.delete,
+                onTap: () => btnDeleteTouched(choice),
+              ),
+            ],
+            dismissal: SlidableDismissal(
+              child: SlidableDrawerDismissal(),
+            ),
+            child: ChoiceRowWidget(
+              choiceEntry: choice,
+            ),
           ),
-        ],
-        secondaryActions: <Widget>[
-          IconSlideAction(
-            caption: 'Delete',
-            color: Colors.red,
-            icon: Icons.delete,
-            onTap: () => btnDeleteTouched(choice),
-          ),
-        ],
-        dismissal: SlidableDismissal(
-          child: SlidableDrawerDismissal(),
         ),
-        child: ChoiceRowWidget(
-          choiceEntry: choice,
-        ),
-      )));
+      );
     }
 
     return arr;

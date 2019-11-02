@@ -4,7 +4,6 @@ class AddQuestionDialog extends StatefulWidget {
   final List<String> list;
 
   AddQuestionDialog({Key key, this.list}) : super(key: key);
-  // AddQuestionDialog({Key key}) : super(key: key);
 
   _AddQuestionDialogState createState() => _AddQuestionDialogState();
 }
@@ -32,11 +31,12 @@ class _AddQuestionDialogState extends State<AddQuestionDialog> {
         },
         controller: _questionController,
         decoration: InputDecoration(
-            hintText: "Your Question...",
-            hintStyle: TextStyle(
-              color: Colors.black45,
-              fontSize: 21.0,
-            )),
+          hintText: "Your Question...",
+          hintStyle: TextStyle(
+            color: Colors.black45,
+            fontSize: 21.0,
+          ),
+        ),
       ),
       actions: <Widget>[
         FlatButton(

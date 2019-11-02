@@ -4,15 +4,9 @@ import 'package:flutter_mobx_example/stores/choice_list.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ChoiceListLocalStorableService {
-  // final Function(Map<String, dynamic>) _fromJson;
-  // final Function(T) _toJson;
   final String _attrName = "choices";
 
-  // LocalStorableService(this._fromJson, this._toJson, this._attrName);
   ChoiceListLocalStorableService();
-
-  // T fromJson(Map<String, dynamic> json) => _fromJson(json);
-  // Map<String, dynamic> toJson(T list) => _toJson(list);
 
   Future<ChoiceList> loadData() async {
     print("loading data!");

@@ -1,6 +1,5 @@
 // TODO: 1. Add state maangement with a list of choices
 
-import 'dart:convert';
 import 'dart:math';
 
 import 'package:bloc_pattern/bloc_pattern.dart';
@@ -20,28 +19,19 @@ var storable = ChoiceListLocalStorableService();
 
 @JsonSerializable()
 class ChoiceList extends _ChoiceList with _$ChoiceList {
-  // final ChoiceList initialChoiceList;
-
-  // ChoiceList({ChoiceList choiceList}) : super();
   ChoiceList();
 
-  /// A necessary factory constructor for creating a new User instance
-  /// from a map. Pass the map to the generated `_$UserFromMappedJson()` constructor.
-  /// The constructor is named after the source class, in this case, User.
+  /// A necessary factory constructor for creating a new ChoiceList instance
+  /// from a map. Pass the map to the generated `_$ChoiceListFromJson()` constructor.
+  /// The constructor is named after the source class, in this case, ChoiceList.
   factory ChoiceList.fromJson(Map<String, dynamic> json) =>
       _$ChoiceListFromJson(json);
 
   /// `toJson` is the convention for a class to declare support for serialization
   /// to JSON. The implementation simply calls the private, generated
-  /// helper method `_$UserToJson`.
+  /// helper method `_$ChoiceListToJson`.
   Map<String, dynamic> toJson() => _$ChoiceListToJson(this);
-
-  // static fromJson(json) => _$ChoiceListFromJson(json);
-  // static toJson(list) => _$ChoiceListToJson(list);
 }
-
-// @JsonSerializable()
-// class ChoiceList = _ChoiceList with _$ChoiceList;
 
 abstract class _ChoiceList extends BlocBase with Store {
   @_ObservableListJsonConverter()
@@ -61,43 +51,10 @@ abstract class _ChoiceList extends BlocBase with Store {
     });
   }
 
-  // @action
-  // void saveToLocal() {
-  //   storable.saveData(this);
-  // }
-
-  // final ChoiceList initialChoiceList;
-
-  // Future<ObservableList<Choice>> _loadDataFromLocal() async {
-  //   var future = await storable.loadData();
-  //   return future.choices;
-  // }
-
-  // _ChoiceList() {
-  //   storable.loadData().then((res) {
-  //     if (res != null) {
-  //       choices = res.choices;
-  //       selectedCategory = res.selectedCategory;
-  //     }
-  //   });
-  //   // _loadDataFromLocal().then((ch) {
-  //   //   choices = ch;
-  //   // });
-  // }
-
-  // _ChoiceList({this.initialChoiceList}) {
-  //   print('Initial choice list: ${this.initialChoiceList}');
-  //   if (this.initialChoiceList != null) {
-  //     choices = this.initialChoiceList.choices;
-  //     selectedCategory = this.initialChoiceList.selectedCategory;
-  //   }
-  // }
-
   _ChoiceList() {
     reaction((_) => choices.toList(), (_) {
-      print("saving data");
       storable.saveData(this).then((_) {
-        print("here: saved!");
+        print("saved!");
       });
     });
 
@@ -110,8 +67,6 @@ abstract class _ChoiceList extends BlocBase with Store {
   @computed
   Map<String, ObservableList<Choice>> get choicesMap {
     final Map<String, ObservableList<Choice>> map = {};
-
-    print("[get choicesMap] Choices: ${choices.length}");
 
     if (choices.length == 0) {
       return map;
@@ -134,15 +89,8 @@ abstract class _ChoiceList extends BlocBase with Store {
   bool get isEmpty => choices.length == 0;
 
   @computed
-  List<String> get categoryList {
-    print("[get categoryList] Choices: ${choices.length}");
-    var something =
-        Set<String>.from(choices.map<String>((v) => v.category)).toList();
-    print(something);
-    return List<String>.unmodifiable(
-        Set<String>.from(choices.map<String>((v) => v.category)).toList());
-  }
-  // =>
+  List<String> get categoryList => List<String>.unmodifiable(
+      Set<String>.from(choices.map<String>((v) => v.category)).toList());
 
   @action
   void setSelectedCategory(String category) {
@@ -154,22 +102,17 @@ abstract class _ChoiceList extends BlocBase with Store {
     print("[addChoice.action] payload: {answer: $answer, category: $category}");
     final choice = Choice(id: uuid.v4(), category: category, answer: answer);
     choices.add(choice);
-    // storable.saveData(this).then((_) {
-    //   print("Saved!");
-    // });
   }
 
   @action
   void removeChoice(Choice choice) {
     choices.removeWhere((x) => x == choice);
-    // storable.saveData(this);
   }
 
   @action
   void editChoice(Choice choice) {
     final editIndex = choices.indexWhere((x) => x.id == choice.id);
     choices[editIndex] = choice;
-    // storable.saveData(this);
   }
 
   Choice randomChoice({String category}) {

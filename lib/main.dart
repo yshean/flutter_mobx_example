@@ -13,20 +13,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  // final _storable = ChoiceListLocalStorableService();
   ChoiceList _choiceList = ChoiceList();
-
-  // _MyAppState() {
-  //   _storable.loadData().then((res) {
-  //     if (res != null) {
-  //       print('res: ${res.choices.length}');
-  //       setState(() {
-  //         // _choiceList.choices = res.choices;
-  //         _choiceList = res;
-  //       });
-  //     }
-  //   });
-  // }
 
   @override
   void initState() {
@@ -40,7 +27,6 @@ class _MyAppState extends State<MyApp> {
     // print('choiceList: ${_choiceList.choices.length}');
     // TODO: 2. Add provider for the list
     return BlocProvider(
-      // blocs: [Bloc((i) => ChoiceList(choiceList: _choiceList))],
       blocs: [Bloc((i) => _choiceList)],
       child: MaterialApp(
         title: 'Flutter Demo',

@@ -22,14 +22,11 @@ class _AddNewChoiceScreenState extends State<AddNewChoiceScreen> {
   void initState() {
     super.initState();
     setState(() {
-      // _categoryList = widget.categoryList;
       _categoryList.addAll(widget.categoryList);
     });
 
-    if (widget.choice == null) {
-      print("Add new");
-    } else {
-      print("Edit existing");
+    if (widget.choice != null) {
+      // Edit existing
       setState(() {
         _answerController.text = widget.choice.answer;
         _selectedCategory = widget.choice.category;
@@ -72,10 +69,7 @@ class _AddNewChoiceScreenState extends State<AddNewChoiceScreen> {
                   isExpanded: true,
                   value: _selectedCategory,
                   items: _dropdownMenuItems(),
-                  // items: _dropdownMenuItems(categoryList),
                   onChanged: (value) {
-                    // setSelectedCategory(value);
-                    print(value);
                     setState(() {
                       _selectedCategory = value;
                     });
@@ -88,11 +82,9 @@ class _AddNewChoiceScreenState extends State<AddNewChoiceScreen> {
             child: Text("Add a new question"),
             onPressed: () async {
               final String newQuestion = await showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    // return AddQuestionDialog();
-                    return AddQuestionDialog(list: _categoryList);
-                  });
+                context: context,
+                builder: (_) => AddQuestionDialog(list: _categoryList),
+              );
               if (newQuestion != null) {
                 setState(() {
                   _categoryList.add(newQuestion);
@@ -113,7 +105,6 @@ class _AddNewChoiceScreenState extends State<AddNewChoiceScreen> {
           TextField(
             onChanged: (value) {
               setState(() {
-                // _answer = value;
                 _answerController.text = value;
                 _answerController.selection = TextSelection.collapsed(
                     offset: _answerController.text.length);
@@ -121,12 +112,12 @@ class _AddNewChoiceScreenState extends State<AddNewChoiceScreen> {
             },
             controller: _answerController,
             decoration: InputDecoration(
-                // border: InputBorder.none,
-                hintText: 'Your Answer...',
-                hintStyle: TextStyle(
-                  color: Colors.black45,
-                  fontSize: 21.0,
-                )),
+              hintText: 'Your Answer...',
+              hintStyle: TextStyle(
+                color: Colors.black45,
+                fontSize: 21.0,
+              ),
+            ),
           ),
         ],
       ),
