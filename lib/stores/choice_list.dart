@@ -56,7 +56,7 @@ abstract class _ChoiceList extends BlocBase with Store {
     storable.loadData().then((res) {
       if (res != null) {
         choices = res.choices;
-        selectedCategory = res.selectedCategory;
+        selectedCategory = res.selectedCategory ?? choices.first.category;
       }
     });
   }
@@ -99,6 +99,11 @@ abstract class _ChoiceList extends BlocBase with Store {
       storable.saveData(this).then((_) {
         print("here: saved!");
       });
+    });
+
+    reaction((_) => categoryList, (_) {
+      if (!(categoryList.contains(selectedCategory)))
+        setSelectedCategory(categoryList.first);
     });
   }
 

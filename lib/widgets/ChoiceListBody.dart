@@ -9,7 +9,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:sticky_headers/sticky_headers.dart';
 
 class ChoiceListBody extends StatelessWidget {
-  final _store = BlocProvider.getBloc<ChoiceList>();
+  final store = BlocProvider.getBloc<ChoiceList>();
 
   void btnEditTouched(BuildContext context, Choice choice) async {
     final Choice data = await Navigator.push(
@@ -17,17 +17,17 @@ class ChoiceListBody extends StatelessWidget {
       MaterialPageRoute(
         builder: (_) => AddNewChoiceScreen(
           choice: choice,
-          categoryList: _store.categoryList,
+          categoryList: store.categoryList,
         ),
       ),
     );
     if (data != null) {
-      _store.editChoice(data);
+      store.editChoice(data);
     }
   }
 
   void btnDeleteTouched(Choice choice) {
-    _store.removeChoice(choice);
+    store.removeChoice(choice);
   }
 
   List<Widget> _buildList(BuildContext context, List<Choice> choices) {
@@ -68,18 +68,14 @@ class ChoiceListBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // store.categoryList.add("soemthing");
-    print('itemCount: ${_store.categoryList.length}');
-    print('categoryList: ${_store.categoryList}');
     return Center(
       child: Observer(
         builder: (_) => ListView.builder(
-            itemCount: _store.categoryList.length,
+            itemCount: store.categoryList.length,
             itemBuilder: (BuildContext context, int index) {
-              final category = _store.categoryList[index];
-              final catItems = _store.choicesMap[category];
-              // print('category: $category, catItems: ${catItems.length}');
-              if (catItems == null || catItems.length == 0) {
+              final category = store.categoryList[index];
+              final catItems = store.choicesMap[category];
+              if (catItems.length == 0) {
                 return SizedBox.shrink();
               }
               return StickyHeader(

@@ -22,7 +22,7 @@ class _AddNewChoiceScreenState extends State<AddNewChoiceScreen> {
   void initState() {
     super.initState();
     setState(() {
-      _categoryList = widget.categoryList;
+      _categoryList.addAll(widget.categoryList);
     });
 
     if (widget.choice == null) {

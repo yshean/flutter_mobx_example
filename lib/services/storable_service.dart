@@ -21,15 +21,8 @@ class ChoiceListLocalStorableService {
     final localStoreValue = prefs.getString(_attrName);
     ChoiceList decoded;
     if (localStoreValue != null) {
-      print(localStoreValue);
-      // Map<String, dynamic> json =
-      //     Map<String, dynamic>.from(jsonDecode(localStoreValue));
-      // print('JSON: $json');
-      // print('Runtime type: ${json.runtimeType}');
       decoded = ChoiceList.fromJson(
           Map<String, dynamic>.from(jsonDecode(localStoreValue)));
-      print(decoded.choices[0].answer);
-      print(decoded.selectedCategory);
     }
     return decoded;
   }
