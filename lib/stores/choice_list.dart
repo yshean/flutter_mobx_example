@@ -127,7 +127,7 @@ abstract class _ChoiceList extends BlocBase with Store {
           normalList.where((entry) => (entry.category == cat)));
     }
 
-    return map;
+    return Map.unmodifiable(map);
   }
 
   @computed
@@ -139,7 +139,8 @@ abstract class _ChoiceList extends BlocBase with Store {
     var something =
         Set<String>.from(choices.map<String>((v) => v.category)).toList();
     print(something);
-    return Set<String>.from(choices.map<String>((v) => v.category)).toList();
+    return List<String>.unmodifiable(
+        Set<String>.from(choices.map<String>((v) => v.category)).toList());
   }
   // =>
 
@@ -150,6 +151,7 @@ abstract class _ChoiceList extends BlocBase with Store {
 
   @action
   void addChoice(String answer, String category) {
+    print("[addChoice.action] payload: {answer: $answer, category: $category}");
     final choice = Choice(id: uuid.v4(), category: category, answer: answer);
     choices.add(choice);
     // storable.saveData(this).then((_) {

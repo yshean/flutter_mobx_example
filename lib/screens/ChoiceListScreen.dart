@@ -10,12 +10,11 @@ class ChoiceListScreen extends StatelessWidget {
   final store = BlocProvider.getBloc<ChoiceList>();
 
   void _gotoAddScreen(BuildContext context) async {
-    final categoryList = List<String>.unmodifiable(store.categoryList);
     final Map data = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (_) => AddNewChoiceScreen(
-          categoryList: categoryList,
+          categoryList: store.categoryList,
         ),
       ),
     );
