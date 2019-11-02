@@ -11,7 +11,8 @@ ChoiceList _$ChoiceListFromJson(Map<String, dynamic> json) {
     ..choices = json['choices'] == null
         ? null
         : const _ObservableListJsonConverter().fromJson(json['choices'] as List)
-    ..selectedCategory = json['selectedCategory'] as String;
+    ..selectedCategory = json['selectedCategory'] as String
+    ..status = _$enumDecodeNullable(_$StatusEnumMap, json['status']);
 }
 
 Map<String, dynamic> _$ChoiceListToJson(ChoiceList instance) =>
@@ -19,8 +20,35 @@ Map<String, dynamic> _$ChoiceListToJson(ChoiceList instance) =>
       'choices': instance.choices == null
           ? null
           : const _ObservableListJsonConverter().toJson(instance.choices),
-      'selectedCategory': instance.selectedCategory
+      'selectedCategory': instance.selectedCategory,
+      'status': _$StatusEnumMap[instance.status]
     };
+
+T _$enumDecode<T>(Map<T, dynamic> enumValues, dynamic source) {
+  if (source == null) {
+    throw ArgumentError('A value must be provided. Supported values: '
+        '${enumValues.values.join(', ')}');
+  }
+  return enumValues.entries
+      .singleWhere((e) => e.value == source,
+          orElse: () => throw ArgumentError(
+              '`$source` is not one of the supported values: '
+              '${enumValues.values.join(', ')}'))
+      .key;
+}
+
+T _$enumDecodeNullable<T>(Map<T, dynamic> enumValues, dynamic source) {
+  if (source == null) {
+    return null;
+  }
+  return _$enumDecode<T>(enumValues, source);
+}
+
+const _$StatusEnumMap = <Status, dynamic>{
+  Status.IDLE: 'IDLE',
+  Status.LOADING: 'LOADING',
+  Status.ERROR: 'ERROR'
+};
 
 // **************************************************************************
 // StoreGenerator
@@ -82,13 +110,30 @@ mixin _$ChoiceList on _ChoiceList, Store {
     }, _$selectedCategoryAtom, name: '${_$selectedCategoryAtom.name}_set');
   }
 
+  final _$statusAtom = Atom(name: '_ChoiceList.status');
+
+  @override
+  Status get status {
+    _$statusAtom.context.enforceReadPolicy(_$statusAtom);
+    _$statusAtom.reportObserved();
+    return super.status;
+  }
+
+  @override
+  set status(Status value) {
+    _$statusAtom.context.conditionallyRunInAction(() {
+      super.status = value;
+      _$statusAtom.reportChanged();
+    }, _$statusAtom, name: '${_$statusAtom.name}_set');
+  }
+
   final _$_ChoiceListActionController = ActionController(name: '_ChoiceList');
 
   @override
-  void loadFromLocal() {
+  void initializeList(ChoiceList list) {
     final _$actionInfo = _$_ChoiceListActionController.startAction();
     try {
-      return super.loadFromLocal();
+      return super.initializeList(list);
     } finally {
       _$_ChoiceListActionController.endAction(_$actionInfo);
     }

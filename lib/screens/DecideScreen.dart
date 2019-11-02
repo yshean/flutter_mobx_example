@@ -21,7 +21,10 @@ class DecideScreen extends StatelessWidget {
         appBar: AppBar(
           title: Text('Make a Choice'),
         ),
-        body: store.isEmpty ? EmptyChoiceBody() : DecideScreenBody(),
+        // body: store.isEmpty ? EmptyChoiceBody() : DecideScreenBody(),
+        body: store.status == Status.ERROR
+            ? Text('Some error occurred')
+            : (store.isEmpty ? EmptyChoiceBody() : DecideScreenBody()),
         floatingActionButton: FloatingActionButton(
           onPressed: () => _gotoListScreen(context),
           tooltip: 'Add a choice',

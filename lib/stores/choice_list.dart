@@ -33,6 +33,8 @@ class ChoiceList extends _ChoiceList with _$ChoiceList {
   Map<String, dynamic> toJson() => _$ChoiceListToJson(this);
 }
 
+enum Status { IDLE, LOADING, ERROR }
+
 abstract class _ChoiceList extends BlocBase with Store {
   @_ObservableListJsonConverter()
   @observable
@@ -41,15 +43,42 @@ abstract class _ChoiceList extends BlocBase with Store {
   @observable
   String selectedCategory;
 
+  @observable
+  Status status = Status.IDLE;
+
   @action
-  void loadFromLocal() {
+  void initializeList(ChoiceList list) {
+    choices = list.choices;
+    selectedCategory = list.selectedCategory ?? choices.first.category;
+  }
+
+  Future loadFromLocal() async {
     print("[loadFromLocal.action]");
-    storable.loadData().then((res) {
+    ChoiceList res;
+    status = Status.LOADING;
+    try {
+      res = await storable.loadData();
       if (res != null) {
-        choices = res.choices;
-        selectedCategory = res.selectedCategory ?? choices.first.category;
+        initializeList(res);
+        // choices = res.choices;
+        // selectedCategory = res.selectedCategory ?? choices.first.category;
       }
-    });
+      status = Status.IDLE;
+      // throw Exception();
+    } catch (_) {
+      status = Status.ERROR;
+    }
+
+    return true;
+    // storable.loadData().then((res) {
+    //   if (res != null) {
+    //     choices = res.choices;
+    //     selectedCategory = res.selectedCategory ?? choices.first.category;
+    //   }
+    //   status = Status.IDLE;
+    // }).catchError((err) {
+    //   status = Status.ERROR;
+    // });
   }
 
   _ChoiceList() {
@@ -60,6 +89,10 @@ abstract class _ChoiceList extends BlocBase with Store {
     reaction((_) => categoryList, (_) {
       if (!(categoryList.contains(selectedCategory)))
         setSelectedCategory(categoryList.first);
+    });
+
+    reaction((_) => status, (s) {
+      print('Status: $s');
     });
   }
 

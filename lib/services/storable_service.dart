@@ -9,6 +9,7 @@ class ChoiceListLocalStorableService {
   ChoiceListLocalStorableService();
 
   Future<ChoiceList> loadData() async {
+    await Future.delayed(const Duration(seconds: 3));
     SharedPreferences prefs = await SharedPreferences.getInstance();
     ChoiceList decoded;
 
