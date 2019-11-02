@@ -17,7 +17,6 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-    print("loading from local");
     _choiceList.loadFromLocal();
     super.initState();
   }

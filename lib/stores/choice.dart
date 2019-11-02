@@ -12,4 +12,9 @@ class Choice {
 
   static Choice fromJson(Map<String, dynamic> json) => _$ChoiceFromJson(json);
   static Map<String, dynamic> toJson(Choice choice) => _$ChoiceToJson(choice);
+
+  @override
+  String toString() {
+    return 'Choice(id: $id, category: $category, answer: $answer)';
+  }
 }

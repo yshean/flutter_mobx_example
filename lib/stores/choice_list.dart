@@ -43,6 +43,7 @@ abstract class _ChoiceList extends BlocBase with Store {
 
   @action
   void loadFromLocal() {
+    print("[loadFromLocal.action]");
     storable.loadData().then((res) {
       if (res != null) {
         choices = res.choices;
@@ -53,9 +54,7 @@ abstract class _ChoiceList extends BlocBase with Store {
 
   _ChoiceList() {
     reaction((_) => choices.toList(), (_) {
-      storable.saveData(this).then((_) {
-        print("saved!");
-      });
+      storable.saveData(this);
     });
 
     reaction((_) => categoryList, (_) {
@@ -94,6 +93,7 @@ abstract class _ChoiceList extends BlocBase with Store {
 
   @action
   void setSelectedCategory(String category) {
+    print("[setSelectedCategory.action] payload: {category: $category}");
     selectedCategory = category;
   }
 
@@ -106,11 +106,13 @@ abstract class _ChoiceList extends BlocBase with Store {
 
   @action
   void removeChoice(Choice choice) {
+    print("[removeChoice.action] payload: $choice");
     choices.removeWhere((x) => x == choice);
   }
 
   @action
   void editChoice(Choice choice) {
+    print("[editChoice.action] payload: $choice");
     final editIndex = choices.indexWhere((x) => x.id == choice.id);
     choices[editIndex] = choice;
   }

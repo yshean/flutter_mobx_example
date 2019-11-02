@@ -9,15 +9,19 @@ class ChoiceListLocalStorableService {
   ChoiceListLocalStorableService();
 
   Future<ChoiceList> loadData() async {
-    print("loading data!");
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    // prefs.clear();
-    final localStoreValue = prefs.getString(_attrName);
     ChoiceList decoded;
-    if (localStoreValue != null) {
-      decoded = ChoiceList.fromJson(
-          Map<String, dynamic>.from(jsonDecode(localStoreValue)));
+
+    try {
+      final localStoreValue = prefs.getString(_attrName);
+      if (localStoreValue != null) {
+        decoded = ChoiceList.fromJson(
+            Map<String, dynamic>.from(jsonDecode(localStoreValue)));
+      }
+    } catch (err) {
+      prefs.clear();
     }
+
     return decoded;
   }
 
