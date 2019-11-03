@@ -12,7 +12,9 @@ ChoiceList _$ChoiceListFromJson(Map<String, dynamic> json) {
         ? null
         : const _ObservableListJsonConverter().fromJson(json['choices'] as List)
     ..selectedCategory = json['selectedCategory'] as String
-    ..status = _$enumDecodeNullable(_$StatusEnumMap, json['status']);
+    ..status = _$enumDecodeNullable(_$StatusEnumMap, json['status'])
+    ..savingStatus =
+        _$enumDecodeNullable(_$StatusEnumMap, json['savingStatus']);
 }
 
 Map<String, dynamic> _$ChoiceListToJson(ChoiceList instance) =>
@@ -21,7 +23,8 @@ Map<String, dynamic> _$ChoiceListToJson(ChoiceList instance) =>
           ? null
           : const _ObservableListJsonConverter().toJson(instance.choices),
       'selectedCategory': instance.selectedCategory,
-      'status': _$StatusEnumMap[instance.status]
+      'status': _$StatusEnumMap[instance.status],
+      'savingStatus': _$StatusEnumMap[instance.savingStatus]
     };
 
 T _$enumDecode<T>(Map<T, dynamic> enumValues, dynamic source) {
@@ -127,11 +130,35 @@ mixin _$ChoiceList on _ChoiceList, Store {
     }, _$statusAtom, name: '${_$statusAtom.name}_set');
   }
 
+  final _$savingStatusAtom = Atom(name: '_ChoiceList.savingStatus');
+
+  @override
+  Status get savingStatus {
+    _$savingStatusAtom.context.enforceReadPolicy(_$savingStatusAtom);
+    _$savingStatusAtom.reportObserved();
+    return super.savingStatus;
+  }
+
+  @override
+  set savingStatus(Status value) {
+    _$savingStatusAtom.context.conditionallyRunInAction(() {
+      super.savingStatus = value;
+      _$savingStatusAtom.reportChanged();
+    }, _$savingStatusAtom, name: '${_$savingStatusAtom.name}_set');
+  }
+
   final _$loadFromLocal2AsyncAction = AsyncAction('loadFromLocal2');
 
   @override
   Future<void> loadFromLocal2() {
     return _$loadFromLocal2AsyncAction.run(() => super.loadFromLocal2());
+  }
+
+  final _$saveToLocalAsyncAction = AsyncAction('saveToLocal');
+
+  @override
+  Future<void> saveToLocal() {
+    return _$saveToLocalAsyncAction.run(() => super.saveToLocal());
   }
 
   final _$_ChoiceListActionController = ActionController(name: '_ChoiceList');

@@ -1,5 +1,8 @@
+import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_mobx_example/stores/choice.dart';
+import 'package:flutter_mobx_example/stores/choice_list.dart';
 import 'package:flutter_mobx_example/widgets/AddQuestionDialog.dart';
 
 class AddNewChoiceScreen extends StatefulWidget {
@@ -126,33 +129,42 @@ class _AddNewChoiceScreenState extends State<AddNewChoiceScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("New Choice"),
-        actions: <Widget>[
-          FlatButton(
-            onPressed: () {
-              if (widget.choice?.id != null) {
-                // editing mode
-                Navigator.pop(
-                    context,
-                    Choice(
-                        id: widget.choice.id,
-                        answer: _answerController.text,
-                        category: _selectedCategory));
-              } else {
-                // add new mode
-                Navigator.pop(context, {
-                  'category': _selectedCategory,
-                  'answer': _answerController.text
-                });
-              }
-            },
-            child: Text("Save"),
-          ),
-        ],
+    final store = BlocProvider.getBloc<ChoiceList>();
+
+    return Observer(
+      builder: (_) => Scaffold(
+        appBar: AppBar(
+          title: Text("New Choice"),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () async {
+                await store.saveToLocal();
+                if (store.savingStatus == Status.IDLE) {
+                  if (widget.choice?.id != null) {
+                    // editing mode
+                    Navigator.pop(
+                        context,
+                        Choice(
+                            id: widget.choice.id,
+                            answer: _answerController.text,
+                            category: _selectedCategory));
+                  } else {
+                    // add new mode
+                    Navigator.pop(context, {
+                      'category': _selectedCategory,
+                      'answer': _answerController.text
+                    });
+                  }
+                }
+              },
+              child: store.savingStatus == Status.LOADING
+                  ? Text("Saving")
+                  : Text("Save"),
+            ),
+          ],
+        ),
+        body: _buildForm(),
       ),
-      body: _buildForm(),
     );
   }
 }

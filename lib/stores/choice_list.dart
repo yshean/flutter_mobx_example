@@ -46,6 +46,9 @@ abstract class _ChoiceList extends BlocBase with Store {
   @observable
   Status status = Status.IDLE;
 
+  @observable
+  Status savingStatus = Status.IDLE;
+
   @action
   void loadFromLocal() {
     print("[loadFromLocal.action]");
@@ -75,19 +78,13 @@ abstract class _ChoiceList extends BlocBase with Store {
     try {
       res = await storable.loadData();
       if (res != null) {
-        runInAction(() {
-          choices = res.choices;
-          selectedCategory = res.selectedCategory ?? choices.first.category;
-        });
+        choices = res.choices;
+        selectedCategory = res.selectedCategory ?? choices.first.category;
       }
-      runInAction(() {
-        status = Status.IDLE;
-      });
+      status = Status.IDLE;
       // throw Exception();
     } catch (_) {
-      runInAction(() {
-        status = Status.ERROR;
-      });
+      status = Status.ERROR;
     }
 
     // storable.loadData().then((res) {
@@ -101,7 +98,33 @@ abstract class _ChoiceList extends BlocBase with Store {
     // });
   }
 
+  @action
+  Future<void> saveToLocal() async {
+    print("[saveToLocal.action]");
+    savingStatus = Status.LOADING;
+
+    try {
+      await storable.saveData(this);
+      savingStatus = Status.IDLE;
+      // throw Exception();
+    } catch (_) {
+      savingStatus = Status.ERROR;
+    }
+
+    // storable.saveData(this).then((_) {
+    //   runInAction(() {
+    //     savingStatus = Status.IDLE;
+    //   });
+    //   // throw Exception();
+    // }).catchError((_) {
+    //   runInAction(() {
+    //     savingStatus = Status.ERROR;
+    //   });
+    // });
+  }
+
   _ChoiceList() {
+    // autosave entries when choices is changed
     reaction((_) => choices.toList(), (_) {
       storable.saveData(this);
     });
@@ -113,6 +136,10 @@ abstract class _ChoiceList extends BlocBase with Store {
 
     reaction((_) => status, (s) {
       print('Status: $s');
+    });
+
+    reaction((_) => savingStatus, (s) {
+      print('Saving Status: $s');
     });
   }
 
