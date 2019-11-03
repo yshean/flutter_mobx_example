@@ -26,8 +26,9 @@ class ChoiceListBody extends StatelessWidget {
     }
   }
 
-  void btnDeleteTouched(Choice choice) {
+  void btnDeleteTouched(Choice choice) async {
     store.removeChoice(choice);
+    store.saveToLocal();
   }
 
   List<Widget> _buildList(BuildContext context, List<Choice> choices) {

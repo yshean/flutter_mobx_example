@@ -109,6 +109,7 @@ abstract class _ChoiceList extends BlocBase with Store {
       // throw Exception();
     } catch (_) {
       savingStatus = Status.ERROR;
+      loadFromLocal();
     }
 
     // storable.saveData(this).then((_) {
@@ -125,9 +126,9 @@ abstract class _ChoiceList extends BlocBase with Store {
 
   _ChoiceList() {
     // autosave entries when choices is changed
-    reaction((_) => choices.toList(), (_) {
-      storable.saveData(this);
-    });
+    // reaction((_) => choices.toList(), (_) {
+    //   storable.saveData(this);
+    // });
 
     reaction((_) => categoryList, (_) {
       if (!(categoryList.contains(selectedCategory)))
