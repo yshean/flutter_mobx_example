@@ -49,6 +49,8 @@ abstract class _ChoiceList extends BlocBase with Store {
   @observable
   Status savingStatus = Status.IDLE;
 
+  Choice _lastRemovedChoice;
+
   @action
   void loadFromLocal() {
     print("[loadFromLocal.action]");
@@ -86,16 +88,6 @@ abstract class _ChoiceList extends BlocBase with Store {
     } catch (_) {
       status = Status.ERROR;
     }
-
-    // storable.loadData().then((res) {
-    //   if (res != null) {
-    //     choices = res.choices;
-    //     selectedCategory = res.selectedCategory ?? choices.first.category;
-    //   }
-    //   status = Status.IDLE;
-    // }).catchError((err) {
-    //   status = Status.ERROR;
-    // });
   }
 
   @action
@@ -109,19 +101,8 @@ abstract class _ChoiceList extends BlocBase with Store {
       // throw Exception();
     } catch (_) {
       savingStatus = Status.ERROR;
-      loadFromLocal();
+      undoDelete();
     }
-
-    // storable.saveData(this).then((_) {
-    //   runInAction(() {
-    //     savingStatus = Status.IDLE;
-    //   });
-    //   // throw Exception();
-    // }).catchError((_) {
-    //   runInAction(() {
-    //     savingStatus = Status.ERROR;
-    //   });
-    // });
   }
 
   _ChoiceList() {
@@ -179,6 +160,11 @@ abstract class _ChoiceList extends BlocBase with Store {
   }
 
   @action
+  void undoDelete() {
+    choices.add(_lastRemovedChoice);
+  }
+
+  @action
   void addChoice(String answer, String category) {
     print("[addChoice.action] payload: {answer: $answer, category: $category}");
     final choice = Choice(id: uuid.v4(), category: category, answer: answer);
@@ -188,6 +174,7 @@ abstract class _ChoiceList extends BlocBase with Store {
   @action
   void removeChoice(Choice choice) {
     print("[removeChoice.action] payload: $choice");
+    _lastRemovedChoice = choice;
     choices.removeWhere((x) => x == choice);
   }
 
