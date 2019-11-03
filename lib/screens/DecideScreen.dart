@@ -15,16 +15,17 @@ class DecideScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final store = BlocProvider.getBloc<ChoiceList>();
-
     return Observer(
       builder: (_) => Scaffold(
         appBar: AppBar(
           title: Text('Make a Choice'),
         ),
         // body: store.isEmpty ? EmptyChoiceBody() : DecideScreenBody(),
-        body: store.status == Status.ERROR
-            ? Text('Some error occurred')
-            : (store.isEmpty ? EmptyChoiceBody() : DecideScreenBody()),
+        body: store.status == Status.IDLE
+            ? (store.isEmpty ? EmptyChoiceBody() : DecideScreenBody())
+            : (store.status == Status.LOADING
+                ? Center(child: CircularProgressIndicator())
+                : Text('Some error occurred')),
         floatingActionButton: FloatingActionButton(
           onPressed: () => _gotoListScreen(context),
           tooltip: 'Add a choice',

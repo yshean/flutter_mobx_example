@@ -127,13 +127,20 @@ mixin _$ChoiceList on _ChoiceList, Store {
     }, _$statusAtom, name: '${_$statusAtom.name}_set');
   }
 
+  final _$loadFromLocal2AsyncAction = AsyncAction('loadFromLocal2');
+
+  @override
+  Future<void> loadFromLocal2() {
+    return _$loadFromLocal2AsyncAction.run(() => super.loadFromLocal2());
+  }
+
   final _$_ChoiceListActionController = ActionController(name: '_ChoiceList');
 
   @override
-  void initializeList(ChoiceList list) {
+  void loadFromLocal() {
     final _$actionInfo = _$_ChoiceListActionController.startAction();
     try {
-      return super.initializeList(list);
+      return super.loadFromLocal();
     } finally {
       _$_ChoiceListActionController.endAction(_$actionInfo);
     }

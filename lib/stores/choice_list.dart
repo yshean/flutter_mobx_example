@@ -47,29 +47,49 @@ abstract class _ChoiceList extends BlocBase with Store {
   Status status = Status.IDLE;
 
   @action
-  void initializeList(ChoiceList list) {
-    choices = list.choices;
-    selectedCategory = list.selectedCategory ?? choices.first.category;
+  void loadFromLocal() {
+    print("[loadFromLocal.action]");
+    status = Status.LOADING;
+
+    storable.loadData().then((res) {
+      runInAction(() {
+        if (res != null) {
+          choices = res.choices;
+          selectedCategory = res.selectedCategory ?? choices.first.category;
+        }
+        status = Status.IDLE;
+      });
+      // throw Exception();
+    }).catchError((_) {
+      runInAction(() {
+        status = Status.ERROR;
+      });
+    });
   }
 
-  Future loadFromLocal() async {
-    print("[loadFromLocal.action]");
+  @action
+  Future<void> loadFromLocal2() async {
+    print("[loadFromLocal2.action]");
     ChoiceList res;
     status = Status.LOADING;
     try {
       res = await storable.loadData();
       if (res != null) {
-        initializeList(res);
-        // choices = res.choices;
-        // selectedCategory = res.selectedCategory ?? choices.first.category;
+        runInAction(() {
+          choices = res.choices;
+          selectedCategory = res.selectedCategory ?? choices.first.category;
+        });
       }
-      status = Status.IDLE;
+      runInAction(() {
+        status = Status.IDLE;
+      });
       // throw Exception();
     } catch (_) {
-      status = Status.ERROR;
+      runInAction(() {
+        status = Status.ERROR;
+      });
     }
 
-    return true;
     // storable.loadData().then((res) {
     //   if (res != null) {
     //     choices = res.choices;
