@@ -9,9 +9,8 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:sticky_headers/sticky_headers.dart';
 
 class ChoiceListBody extends StatelessWidget {
-  final store = BlocProvider.getBloc<ChoiceList>();
-
-  void btnEditTouched(BuildContext context, Choice choice) async {
+  // TODO: 6a. Make the editChoice function
+  void btnEditTouched(BuildContext context, Choice choice, store) async {
     final Choice data = await Navigator.push(
       context,
       MaterialPageRoute(
@@ -26,12 +25,13 @@ class ChoiceListBody extends StatelessWidget {
     }
   }
 
-  void btnDeleteTouched(Choice choice) async {
+  // TODO: 7a. Make the deleteChoice function
+  void btnDeleteTouched(Choice choice, store) async {
     store.removeChoice(choice);
     store.saveToLocal();
   }
 
-  List<Widget> _buildList(BuildContext context, List<Choice> choices) {
+  List<Widget> _buildList(BuildContext context, List<Choice> choices, store) {
     List<Widget> arr = List<Widget>();
 
     for (Choice choice in choices) {
@@ -45,7 +45,7 @@ class ChoiceListBody extends StatelessWidget {
                 caption: 'Edit',
                 color: Colors.indigo,
                 icon: Icons.edit,
-                onTap: () => btnEditTouched(context, choice),
+                onTap: () => btnEditTouched(context, choice, store),
               ),
             ],
             secondaryActions: <Widget>[
@@ -53,7 +53,7 @@ class ChoiceListBody extends StatelessWidget {
                 caption: 'Delete',
                 color: Colors.red,
                 icon: Icons.delete,
-                onTap: () => btnDeleteTouched(choice),
+                onTap: () => btnDeleteTouched(choice, store),
               ),
             ],
             dismissal: SlidableDismissal(
@@ -72,6 +72,8 @@ class ChoiceListBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final store = BlocProvider.getBloc<ChoiceList>();
+    // TODO: 5a. Make the view choice list function
     return Center(
       child: Observer(
         builder: (_) => ListView.builder(
@@ -93,7 +95,7 @@ class ChoiceListBody extends StatelessWidget {
                     style: Theme.of(context).textTheme.body1,
                   ),
                 ),
-                content: Column(children: _buildList(context, catItems)),
+                content: Column(children: _buildList(context, catItems, store)),
               );
             }),
       ),

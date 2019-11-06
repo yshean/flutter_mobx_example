@@ -147,11 +147,11 @@ mixin _$ChoiceList on _ChoiceList, Store {
     }, _$savingStatusAtom, name: '${_$savingStatusAtom.name}_set');
   }
 
-  final _$loadFromLocal2AsyncAction = AsyncAction('loadFromLocal2');
+  final _$loadFromLocalAsyncAction = AsyncAction('loadFromLocal');
 
   @override
-  Future<void> loadFromLocal2() {
-    return _$loadFromLocal2AsyncAction.run(() => super.loadFromLocal2());
+  Future<void> loadFromLocal() {
+    return _$loadFromLocalAsyncAction.run(() => super.loadFromLocal());
   }
 
   final _$saveToLocalAsyncAction = AsyncAction('saveToLocal');
@@ -164,10 +164,10 @@ mixin _$ChoiceList on _ChoiceList, Store {
   final _$_ChoiceListActionController = ActionController(name: '_ChoiceList');
 
   @override
-  void loadFromLocal() {
+  void undoDelete() {
     final _$actionInfo = _$_ChoiceListActionController.startAction();
     try {
-      return super.loadFromLocal();
+      return super.undoDelete();
     } finally {
       _$_ChoiceListActionController.endAction(_$actionInfo);
     }

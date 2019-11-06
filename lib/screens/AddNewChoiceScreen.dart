@@ -138,6 +138,7 @@ class _AddNewChoiceScreenState extends State<AddNewChoiceScreen> {
           actions: <Widget>[
             FlatButton(
               onPressed: () async {
+                // TODO: 9a. Make the saveToLocal function
                 await store.saveToLocal();
                 if (store.savingStatus == Status.IDLE) {
                   if (widget.choice?.id != null) {
@@ -157,6 +158,7 @@ class _AddNewChoiceScreenState extends State<AddNewChoiceScreen> {
                   }
                 }
               },
+              // TODO: 9c. Show "Saving" when it's still saving
               child: store.savingStatus == Status.LOADING
                   ? Text("Saving")
                   : Text("Save"),

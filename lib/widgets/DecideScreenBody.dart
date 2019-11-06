@@ -6,15 +6,14 @@ import 'package:flutter_mobx_example/widgets/EmptyChoiceBody.dart';
 import 'package:flutter_mobx_example/widgets/SelectQuestion.dart';
 
 class DecideScreenBody extends StatelessWidget {
-  final store = BlocProvider.getBloc<ChoiceList>();
-
-  void _showDialog(context) {
+  void _showDialog(context, store) {
     showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
             title: Text('You should go for...'),
             content: Text(
+                // TODO: 8b. Get random choice from list of choice
                 store.randomChoice(category: store.selectedCategory).answer),
             actions: <Widget>[
               FlatButton(
@@ -30,6 +29,7 @@ class DecideScreenBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final store = BlocProvider.getBloc<ChoiceList>();
     return Observer(
       builder: (_) => Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -57,7 +57,7 @@ class DecideScreenBody extends StatelessWidget {
                                 style: TextStyle(
                                     fontSize: 26, fontWeight: FontWeight.w600)),
                             onPressed: () {
-                              _showDialog(context);
+                              _showDialog(context, store);
                             },
                           ),
                         )

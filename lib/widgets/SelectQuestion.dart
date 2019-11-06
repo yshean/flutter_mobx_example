@@ -17,6 +17,7 @@ class SelectQuestion extends StatelessWidget {
                 .map((String cat) =>
                     DropdownMenuItem(value: cat, child: Text(cat)))
                 .toList()),
+            // TODO: 8a. Get random choice from list of choice according to selected category
             onChanged: (value) => store.setSelectedCategory(value)),
       ),
     );

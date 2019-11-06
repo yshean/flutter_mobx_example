@@ -1,3 +1,5 @@
+// TODO: 1. Define the data structure
+
 import 'package:json_annotation/json_annotation.dart';
 
 part 'choice.g.dart';

@@ -12,6 +12,18 @@ class DecideScreen extends StatelessWidget {
         context, MaterialPageRoute(builder: (_) => ChoiceListScreen()));
   }
 
+  _getBody(store) {
+    if (store.status == Status.IDLE) {
+      if (store.isEmpty) return EmptyChoiceBody();
+      return DecideScreenBody();
+    }
+
+    if (store.status == Status.LOADING)
+      return Center(child: CircularProgressIndicator());
+
+    return Text('Some error occurred');
+  }
+
   @override
   Widget build(BuildContext context) {
     final store = BlocProvider.getBloc<ChoiceList>();
@@ -20,12 +32,7 @@ class DecideScreen extends StatelessWidget {
         appBar: AppBar(
           title: Text('Make a Choice'),
         ),
-        // body: store.isEmpty ? EmptyChoiceBody() : DecideScreenBody(),
-        body: store.status == Status.IDLE
-            ? (store.isEmpty ? EmptyChoiceBody() : DecideScreenBody())
-            : (store.status == Status.LOADING
-                ? Center(child: CircularProgressIndicator())
-                : Text('Some error occurred')),
+        body: _getBody(store),
         floatingActionButton: FloatingActionButton(
           onPressed: () => _gotoListScreen(context),
           tooltip: 'Add a choice',

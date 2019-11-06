@@ -7,9 +7,7 @@ import 'package:flutter_mobx_example/widgets/ChoiceListBody.dart';
 import 'package:flutter_mobx_example/widgets/EmptyChoiceBody.dart';
 
 class ChoiceListScreen extends StatelessWidget {
-  final store = BlocProvider.getBloc<ChoiceList>();
-
-  void _gotoAddScreen(BuildContext context) async {
+  void _gotoAddScreen(BuildContext context, store) async {
     final Map data = await Navigator.push(
       context,
       MaterialPageRoute(
@@ -19,6 +17,7 @@ class ChoiceListScreen extends StatelessWidget {
       ),
     );
 
+    // TODO: 4a. Make the addChoice function
     if (data != null) {
       store.addChoice(data['answer'], data['category']);
     }
@@ -26,6 +25,7 @@ class ChoiceListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final store = BlocProvider.getBloc<ChoiceList>();
     return Observer(
       builder: (_) => Scaffold(
         appBar: AppBar(
@@ -33,7 +33,7 @@ class ChoiceListScreen extends StatelessWidget {
         ),
         body: store.isEmpty ? EmptyChoiceBody() : ChoiceListBody(),
         floatingActionButton: FloatingActionButton(
-          onPressed: () => _gotoAddScreen(context),
+          onPressed: () => _gotoAddScreen(context, store),
           tooltip: 'Add a choice',
           child: Icon(Icons.add),
         ),

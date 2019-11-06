@@ -1,4 +1,4 @@
-// TODO: 1. Add state maangement with a list of choices
+// TODO: 2. Add state maangement with a list of choices
 
 import 'dart:math';
 
@@ -21,15 +21,9 @@ var storable = ChoiceListLocalStorableService();
 class ChoiceList extends _ChoiceList with _$ChoiceList {
   ChoiceList();
 
-  /// A necessary factory constructor for creating a new ChoiceList instance
-  /// from a map. Pass the map to the generated `_$ChoiceListFromJson()` constructor.
-  /// The constructor is named after the source class, in this case, ChoiceList.
   factory ChoiceList.fromJson(Map<String, dynamic> json) =>
       _$ChoiceListFromJson(json);
 
-  /// `toJson` is the convention for a class to declare support for serialization
-  /// to JSON. The implementation simply calls the private, generated
-  /// helper method `_$ChoiceListToJson`.
   Map<String, dynamic> toJson() => _$ChoiceListToJson(this);
 }
 
@@ -51,66 +45,8 @@ abstract class _ChoiceList extends BlocBase with Store {
 
   Choice _lastRemovedChoice;
 
-  @action
-  void loadFromLocal() {
-    print("[loadFromLocal.action]");
-    status = Status.LOADING;
-
-    storable.loadData().then((res) {
-      runInAction(() {
-        if (res != null) {
-          choices = res.choices;
-          selectedCategory = res.selectedCategory ?? choices.first.category;
-        }
-        status = Status.IDLE;
-      });
-      // throw Exception();
-    }).catchError((_) {
-      runInAction(() {
-        status = Status.ERROR;
-      });
-    });
-  }
-
-  @action
-  Future<void> loadFromLocal2() async {
-    print("[loadFromLocal2.action]");
-    ChoiceList res;
-    status = Status.LOADING;
-    try {
-      res = await storable.loadData();
-      if (res != null) {
-        choices = res.choices;
-        selectedCategory = res.selectedCategory ?? choices.first.category;
-      }
-      status = Status.IDLE;
-      // throw Exception();
-    } catch (_) {
-      status = Status.ERROR;
-    }
-  }
-
-  @action
-  Future<void> saveToLocal() async {
-    print("[saveToLocal.action]");
-    savingStatus = Status.LOADING;
-
-    try {
-      await storable.saveData(this);
-      savingStatus = Status.IDLE;
-      // throw Exception();
-    } catch (_) {
-      savingStatus = Status.ERROR;
-      undoDelete();
-    }
-  }
-
   _ChoiceList() {
-    // autosave entries when choices is changed
-    // reaction((_) => choices.toList(), (_) {
-    //   storable.saveData(this);
-    // });
-
+    // TODO: 11a. Set selected category to other value if the selected category has been removed/edited away
     reaction((_) => categoryList, (_) {
       if (!(categoryList.contains(selectedCategory)))
         setSelectedCategory(categoryList.first);
@@ -125,6 +61,8 @@ abstract class _ChoiceList extends BlocBase with Store {
     });
   }
 
+  // TODO: 5c. Compute the choice map (map from category to list of choice)
+  // you need to group choices of same category/question together to display in ChoiceListBody
   @computed
   Map<String, ObservableList<Choice>> get choicesMap {
     final Map<String, ObservableList<Choice>> map = {};
@@ -146,24 +84,65 @@ abstract class _ChoiceList extends BlocBase with Store {
     return Map.unmodifiable(map);
   }
 
+  // TODO: 5d. Compute if it is empty to handle empty scenario
   @computed
   bool get isEmpty => choices.length == 0;
 
+  // TODO: 5b. Compute/derive the categoryList from list of choices
   @computed
   List<String> get categoryList => List<String>.unmodifiable(
       Set<String>.from(choices.map<String>((v) => v.category)).toList());
 
+  // TODO: 10b. Make the loadFromLocal function
+  @action
+  Future<void> loadFromLocal() async {
+    print("[loadFromLocal.action]");
+    ChoiceList res;
+    status = Status.LOADING;
+    try {
+      res = await storable.loadData();
+      if (res != null) {
+        choices = res.choices;
+        selectedCategory = res.selectedCategory ??
+            (choices.isNotEmpty ? choices.first.category : null);
+      }
+      status = Status.IDLE;
+      // throw Exception();
+    } catch (error) {
+      print(error);
+      status = Status.ERROR;
+    }
+  }
+
+  // TODO: 9b. Make the saveToLocal function
+  @action
+  Future<void> saveToLocal() async {
+    print("[saveToLocal.action]");
+    savingStatus = Status.LOADING;
+
+    try {
+      await storable.saveData(this);
+      savingStatus = Status.IDLE;
+      // throw Exception();
+    } catch (_) {
+      savingStatus = Status.ERROR;
+      undoDelete();
+    }
+  }
+
+  @action
+  void undoDelete() {
+    if (_lastRemovedChoice != null) choices.add(_lastRemovedChoice);
+  }
+
+  // TODO: 10d. Set selected category
   @action
   void setSelectedCategory(String category) {
     print("[setSelectedCategory.action] payload: {category: $category}");
     selectedCategory = category;
   }
 
-  @action
-  void undoDelete() {
-    choices.add(_lastRemovedChoice);
-  }
-
+  // TODO: 4b. Make the addChoice function
   @action
   void addChoice(String answer, String category) {
     print("[addChoice.action] payload: {answer: $answer, category: $category}");
@@ -171,6 +150,7 @@ abstract class _ChoiceList extends BlocBase with Store {
     choices.add(choice);
   }
 
+  // TODO: 7b. Make the deleteChoice function
   @action
   void removeChoice(Choice choice) {
     print("[removeChoice.action] payload: $choice");
@@ -178,6 +158,7 @@ abstract class _ChoiceList extends BlocBase with Store {
     choices.removeWhere((x) => x == choice);
   }
 
+  // TODO: 6b. Make the editChoice function
   @action
   void editChoice(Choice choice) {
     print("[editChoice.action] payload: $choice");
@@ -185,6 +166,7 @@ abstract class _ChoiceList extends BlocBase with Store {
     choices[editIndex] = choice;
   }
 
+  // TODO: 8c. Get random choice from list of choice
   Choice randomChoice({String category}) {
     final random = Random();
     final ObservableList<Choice> currCatItems = choicesMap[category];
