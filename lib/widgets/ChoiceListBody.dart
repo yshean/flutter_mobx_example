@@ -9,7 +9,6 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:sticky_headers/sticky_headers.dart';
 
 class ChoiceListBody extends StatelessWidget {
-  // TODO: 6a. Make the editChoice function
   void btnEditTouched(BuildContext context, Choice choice, store) async {
     final Choice data = await Navigator.push(
       context,
@@ -20,13 +19,14 @@ class ChoiceListBody extends StatelessWidget {
         ),
       ),
     );
+    // TODO: 6a. Call the editChoice function
     if (data != null) {
       store.editChoice(data);
     }
   }
 
-  // TODO: 7a. Make the deleteChoice function
   void btnDeleteTouched(Choice choice, store) async {
+    // TODO: 7a. Call the removeChoice function
     store.removeChoice(choice);
     store.saveToLocal();
   }

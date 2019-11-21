@@ -134,11 +134,13 @@ class _AddNewChoiceScreenState extends State<AddNewChoiceScreen> {
     return Observer(
       builder: (_) => Scaffold(
         appBar: AppBar(
-          title: Text("New Choice"),
+          title: widget.choice?.id != null
+              ? Text("Edit Choice")
+              : Text("New Choice"),
           actions: <Widget>[
             FlatButton(
               onPressed: () async {
-                // TODO: 9a. Make the saveToLocal function
+                // TODO: 9a. Call the saveToLocal function
                 await store.saveToLocal();
                 if (store.savingStatus == Status.IDLE) {
                   if (widget.choice?.id != null) {

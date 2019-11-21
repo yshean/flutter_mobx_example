@@ -17,7 +17,7 @@ class ChoiceListScreen extends StatelessWidget {
       ),
     );
 
-    // TODO: 4a. Make the addChoice function
+    // TODO: 4a. Call the addChoice function
     if (data != null) {
       store.addChoice(data['answer'], data['category']);
     }

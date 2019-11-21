@@ -1,5 +1,3 @@
-// TODO: 2. Add state maangement with a list of choices
-
 import 'dart:math';
 
 import 'package:bloc_pattern/bloc_pattern.dart';
@@ -30,6 +28,8 @@ class ChoiceList extends _ChoiceList with _$ChoiceList {
 enum Status { IDLE, LOADING, ERROR }
 
 abstract class _ChoiceList extends BlocBase with Store {
+  // TODO: 2. Add state management with a list of choices
+
   @_ObservableListJsonConverter()
   @observable
   ObservableList<Choice> choices = ObservableList<Choice>();
@@ -46,7 +46,7 @@ abstract class _ChoiceList extends BlocBase with Store {
   Choice _lastRemovedChoice;
 
   _ChoiceList() {
-    // TODO: 11a. Set selected category to other value if the selected category has been removed/edited away
+    // TODO: 11. Set selected category to other value if the selected category has been removed/edited away
     reaction((_) => categoryList, (_) {
       if (!(categoryList.contains(selectedCategory)))
         setSelectedCategory(categoryList.first);
@@ -135,7 +135,7 @@ abstract class _ChoiceList extends BlocBase with Store {
     if (_lastRemovedChoice != null) choices.add(_lastRemovedChoice);
   }
 
-  // TODO: 10d. Set selected category
+  // TODO: 10c. Set selected category
   @action
   void setSelectedCategory(String category) {
     print("[setSelectedCategory.action] payload: {category: $category}");

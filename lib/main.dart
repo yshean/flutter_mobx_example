@@ -15,7 +15,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-    // TODO: 10a. Make the loadFromLocal function
+    // TODO: 10a. Call the loadFromLocal function
     store.loadFromLocal();
     super.initState();
   }
